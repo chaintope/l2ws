@@ -22,7 +22,7 @@ secret_key = "cRNSvkGqZyekUJGrjeiB4XRQGA3BdoR8gq1kkSYtAh5A6a39X68x"
 key = Bitcoin::Key.from_base58(secret_key)
 sig_hash = tx.signature_hash_for_input(0, prev_tx, Bitcoin::Script::SIGHASH_TYPE[:all])
 signature = key.sign(sig_hash)
-script_sig = Bitcoin::Script.to_signature_pubkey_script(signature, key.pub.htb, Bitcoin::Script::SIGHASH_TYPE[:all])
+script_sig = Bitcoin::Script.pack_pushdata(signature + [Bitcoin::Script::SIGHASH_TYPE[:all]].pack("C"))
 tx.in[0].script_sig = script_sig
 
 verify_tx = Bitcoin::Protocol::Tx.new(tx.to_payload)
